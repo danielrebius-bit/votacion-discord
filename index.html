@@ -7,56 +7,85 @@
 <style>
 body{
 margin:0;
-font-family:Arial;
-background:radial-gradient(circle,#1a1d3a,#0f1226);
+font-family: 'Arial', sans-serif;
+background: radial-gradient(circle at top,#1b1f3a,#0b0d1a);
 color:white;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
+overflow:hidden;
 }
 
+/* CARD GLASS */
 .card{
-background:#1c1f3a;
+background: rgba(28,31,58,0.75);
+backdrop-filter: blur(12px);
+border:1px solid rgba(255,255,255,0.08);
 padding:25px;
-border-radius:18px;
+border-radius:20px;
 width:420px;
 text-align:center;
-box-shadow:0 0 30px rgba(0,0,0,0.7);
-animation:pop 0.4s ease;
+box-shadow: 0 0 40px rgba(0,0,0,0.6);
+animation: floatIn 0.5s ease;
 }
 
-@keyframes pop{
-from{transform:scale(0.8);opacity:0;}
-to{transform:scale(1);opacity:1;}
+@keyframes floatIn{
+from{transform:translateY(20px);opacity:0;}
+to{transform:translateY(0);opacity:1;}
 }
 
-input,button{
+h2{
+font-size:20px;
+margin-bottom:10px;
+letter-spacing:1px;
+}
+
+/* INPUT */
+input{
+width:90%;
+padding:10px;
+border-radius:12px;
+border:none;
+outline:none;
+background:#0f1226;
+color:white;
+margin-bottom:10px;
+}
+
+/* BOTONES PRO */
+button{
 padding:10px;
 margin:5px;
 border:none;
-border-radius:10px;
+border-radius:12px;
 width:90%;
-}
-
-button{
 cursor:pointer;
-transition:0.2s;
 font-weight:bold;
+transition:0.2s;
+box-shadow:0 0 10px rgba(0,0,0,0.3);
 }
 
 button:hover{
 transform:scale(1.05);
+filter:brightness(1.2);
 }
 
-.si{background:#ff4d4d;color:white;}
-.no{background:#43b581;color:white;}
+.si{
+background: linear-gradient(45deg,#ff4d4d,#ff1a1a);
+}
 
+.no{
+background: linear-gradient(45deg,#43b581,#1dbf73);
+}
+
+/* PANEL */
 #panel{display:none;}
 
+/* MENSAJE */
 #msg{
 margin-top:10px;
-font-size:16px;
+font-size:15px;
 animation:fade 0.3s ease;
 }
 
@@ -65,28 +94,45 @@ from{opacity:0;transform:translateY(5px);}
 to{opacity:1;transform:translateY(0);}
 }
 
+/* ESTADÍSTICAS */
 .stats{
 margin-top:10px;
 font-size:14px;
 opacity:0.9;
+background:#0f1226;
+padding:8px;
+border-radius:10px;
 }
 
+/* LISTA STYLE CHAT */
 .list{
 margin-top:10px;
 background:#0f1226;
 padding:10px;
-border-radius:10px;
+border-radius:12px;
 max-height:120px;
 overflow:auto;
 text-align:left;
 font-size:13px;
+border:1px solid rgba(255,255,255,0.05);
 }
 
+/* VIDEO GOD */
 video{
 width:100%;
 margin-top:10px;
-border-radius:12px;
+border-radius:14px;
 display:none;
+box-shadow:0 0 20px rgba(0,0,0,0.6);
+}
+
+/* SCROLL BAR */
+::-webkit-scrollbar{
+width:6px;
+}
+::-webkit-scrollbar-thumb{
+background:#444;
+border-radius:10px;
 }
 </style>
 
