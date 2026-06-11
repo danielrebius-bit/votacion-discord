@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Decisión del Servidor</title>
+
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Arial;
+background:radial-gradient(circle,#1a1d3a,#0f1226);
+color:white;
+}
+
+.card{
+text-align:center;
+background:#1c1f3a;
+padding:30px;
+border-radius:20px;
+width:360px;
+box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+
+h1{
+font-size:22px;
+margin-bottom:10px;
+}
+
+.subtitle{
+opacity:0.7;
+margin-bottom:20px;
+}
+
+input{
+width:90%;
+padding:10px;
+border-radius:10px;
+border:none;
+margin-bottom:10px;
+}
+
+button{
+width:45%;
+padding:12px;
+margin:5px;
+border:none;
+border-radius:12px;
+font-size:16px;
+cursor:pointer;
+transition:0.2s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+.si{
+background:#ff4d4d;
+color:white;
+}
+
+.no{
+background:#43b581;
+color:white;
+}
+
+#panel{
+display:none;
+margin-top:20px;
+}
+
+.result{
+margin-top:15px;
+font-size:18px;
+}
+
+video{
+width:100%;
+margin-top:10px;
+border-radius:12px;
+display:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>🧠 Decisión del servidor</h1>
+<p class="subtitle">¿Quieres eliminar el servidor?</p>
+
+<input id="nombre" placeholder="Escribe tu nombre">
+
+<br>
+
+<button onclick="entrar()">Entrar</button>
+
+<div id="panel">
+
+<h2>Hola <span id="user"></span></h2>
+
+<p>¿Qué decides?</p>
+
+<button class="si" onclick="votar('si')">💀 Sí, eliminar</button>
+<button class="no" onclick="votar('no')">🛡️ No, mantener</button>
+
+<div class="result" id="msg"></div>
+
+<video id="video" controls></video>
+
+</div>
+
+</div>
+
+<script>
+
+let user="";
+let yaVoto=false;
+
+function entrar(){
+user=document.getElementById("nombre").value;
+
+if(!user){
+alert("Escribe tu nombre");
+return;
+}
+
+document.getElementById("user").innerText=user;
+document.getElementById("panel").style.display="block";
+}
+
+function votar(op){
+
+if(yaVoto){
+alert("Ya votaste");
+return;
+}
+
+yaVoto=true;
+
+let msg=document.getElementById("msg");
+let video=document.getElementById("video");
+
+video.style.display="block";
+
+if(op==="si"){
+msg.innerText="💀 Decidiste ELIMINAR el servidor...";
+video.src="si.mp4";
+}else{
+msg.innerText="🛡️ Decidiste MANTENER el servidor...";
+video.src="no.mp4";
+}
+
+}
+
+</script>
+
+</body>
+</html>
