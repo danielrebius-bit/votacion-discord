@@ -20,7 +20,7 @@ height:100vh;
 background:#1c1f3a;
 padding:25px;
 border-radius:18px;
-width:380px;
+width:400px;
 text-align:center;
 box-shadow:0 0 25px rgba(0,0,0,0.6);
 }
@@ -57,9 +57,24 @@ display:none;
 .stats{
 margin-top:10px;
 font-size:14px;
-opacity:0.8;
+opacity:0.9;
+}
+
+.list{
+margin-top:10px;
+background:#0f1226;
+padding:10px;
+border-radius:10px;
+max-height:120px;
+overflow:auto;
+text-align:left;
+font-size:13px;
 }
 </style>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
 </head>
 
@@ -89,14 +104,30 @@ opacity:0.8;
 
 <video id="video" controls></video>
 
+<h4>👥 Votantes</h4>
+<div class="list">
+<ul id="lista"></ul>
+</div>
+
 </div>
 
 </div>
 
 <script>
 
+// 🔥 TU FIREBASE
+const firebaseConfig = {
+apiKey: "TU_API_KEY",
+authDomain: "votacion-server.firebaseapp.com",
+databaseURL: "https://votacion-server-default-rtdb.firebaseio.com",
+projectId: "votacion-server",
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 let user="";
-let yaVoto=false;
+let voted=false;
 
 function entrar(){
 user=document.getElementById("nombre").value;
@@ -112,28 +143,54 @@ document.getElementById("panel").style.display="block";
 
 function votar(op){
 
-if(yaVoto){
-alert("Ya votaste");
+if(voted){
+alert("❌ Ya votaste");
 return;
 }
 
-yaVoto=true;
+voted=true;
 
+// guardar voto
+db.ref("votos/"+op).transaction(n=> (n||0)+1);
+
+// guardar usuario
+db.ref("usuarios").push(user);
+
+// UI
 let msg=document.getElementById("msg");
 let video=document.getElementById("video");
 
 video.style.display="block";
 
-// 🔥 VIDEOS CORREGIDOS (TUS ARCHIVOS REALES)
 if(op==="si"){
-msg.innerText="💀 La comunidad quiere ELIMINAR el servidor...";
+msg.innerText="💀 La comunidad quiere ELIMINAR el server...";
 video.src="ssstik.io_@pibbledipple_1778120515212.mp4";
 }else{
-msg.innerText="🛡️ La comunidad quiere MANTENER el servidor...";
+msg.innerText="🛡️ La comunidad quiere MANTENER el server...";
 video.src="ssstik.io_@osdanone_1781160056885.mp4";
 }
 
 }
+
+// 🔄 contador en vivo
+db.ref("votos").on("value", snap=>{
+let d=snap.val()||{};
+document.getElementById("siCount").innerText=d.si||0;
+document.getElementById("noCount").innerText=d.no||0;
+});
+
+// 👥 lista en vivo
+db.ref("usuarios").on("value", snap=>{
+let data=snap.val()||{};
+let lista=document.getElementById("lista");
+lista.innerHTML="";
+
+Object.values(data).forEach(name=>{
+let li=document.createElement("li");
+li.innerText=name;
+lista.appendChild(li);
+});
+});
 
 </script>
 
