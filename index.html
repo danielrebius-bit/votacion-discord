@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Votación PRO</title>
+<title>Votación - Modo Dios</title>
 
 <style>
 body{
 margin:0;
 font-family:Arial;
-background:linear-gradient(135deg,#0f1226,#1a1d3a);
+background:radial-gradient(circle,#1a1d3a,#0f1226);
 color:white;
 display:flex;
 justify-content:center;
@@ -20,9 +20,15 @@ height:100vh;
 background:#1c1f3a;
 padding:25px;
 border-radius:18px;
-width:400px;
+width:420px;
 text-align:center;
-box-shadow:0 0 25px rgba(0,0,0,0.6);
+box-shadow:0 0 30px rgba(0,0,0,0.7);
+animation:pop 0.4s ease;
+}
+
+@keyframes pop{
+from{transform:scale(0.8);opacity:0;}
+to{transform:scale(1);opacity:1;}
 }
 
 input,button{
@@ -36,6 +42,7 @@ width:90%;
 button{
 cursor:pointer;
 transition:0.2s;
+font-weight:bold;
 }
 
 button:hover{
@@ -47,11 +54,15 @@ transform:scale(1.05);
 
 #panel{display:none;}
 
-video{
-width:100%;
+#msg{
 margin-top:10px;
-border-radius:12px;
-display:none;
+font-size:16px;
+animation:fade 0.3s ease;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(5px);}
+to{opacity:1;transform:translateY(0);}
 }
 
 .stats{
@@ -70,6 +81,13 @@ overflow:auto;
 text-align:left;
 font-size:13px;
 }
+
+video{
+width:100%;
+margin-top:10px;
+border-radius:12px;
+display:none;
+}
 </style>
 
 <!-- FIREBASE -->
@@ -82,7 +100,7 @@ font-size:13px;
 
 <div class="card">
 
-<h2>🧠 ¿Eliminar servidor Discord?</h2>
+<h2>💀 ¿Eliminar servidor Discord?</h2>
 
 <input id="nombre" placeholder="Tu nombre">
 
@@ -98,16 +116,20 @@ font-size:13px;
 <p id="msg"></p>
 
 <div class="stats">
-✔ Sí: <span id="siCount">0</span> |
-❌ No: <span id="noCount">0</span>
+💀 Sí: <span id="siCount">0</span> |
+🛡️ No: <span id="noCount">0</span>
 </div>
-
-<video id="video" controls></video>
 
 <h4>👥 Votantes</h4>
 <div class="list">
 <ul id="lista"></ul>
 </div>
+
+<video id="video" controls></video>
+
+<audio id="sound">
+<source src="https://www.soundjay.com/buttons/sounds/button-09.mp3">
+</audio>
 
 </div>
 
@@ -115,7 +137,7 @@ font-size:13px;
 
 <script>
 
-// 🔥 TU FIREBASE
+// 🔥 FIREBASE
 const firebaseConfig = {
 apiKey: "TU_API_KEY",
 authDomain: "votacion-server.firebaseapp.com",
@@ -129,6 +151,7 @@ const db = firebase.database();
 let user="";
 let voted=false;
 
+// entrar
 function entrar(){
 user=document.getElementById("nombre").value;
 
@@ -141,6 +164,12 @@ document.getElementById("user").innerText=user;
 document.getElementById("panel").style.display="block";
 }
 
+// sonido
+function playSound(){
+document.getElementById("sound").play();
+}
+
+// votar
 function votar(op){
 
 if(voted){
@@ -149,6 +178,7 @@ return;
 }
 
 voted=true;
+playSound();
 
 // guardar voto
 db.ref("votos/"+op).transaction(n=> (n||0)+1);
@@ -163,23 +193,23 @@ let video=document.getElementById("video");
 video.style.display="block";
 
 if(op==="si"){
-msg.innerText="💀 La comunidad quiere ELIMINAR el server...";
-video.src="ssstik.io_@pibbledipple_1778120515212.mp4";
+msg.innerHTML="💀 <b>Voto registrado:</b> eliminar servidor <br><span style='opacity:0.7'>decisión enviada</span>";
+video.src="si.mp4";
 }else{
-msg.innerText="🛡️ La comunidad quiere MANTENER el server...";
-video.src="ssstik.io_@osdanone_1781160056885.mp4";
+msg.innerHTML="🛡️ <b>Voto registrado:</b> mantener servidor <br><span style='opacity:0.7'>decisión enviada</span>";
+video.src="no.mp4";
 }
 
 }
 
-// 🔄 contador en vivo
+// contador en vivo
 db.ref("votos").on("value", snap=>{
 let d=snap.val()||{};
 document.getElementById("siCount").innerText=d.si||0;
 document.getElementById("noCount").innerText=d.no||0;
 });
 
-// 👥 lista en vivo
+// lista usuarios
 db.ref("usuarios").on("value", snap=>{
 let data=snap.val()||{};
 let lista=document.getElementById("lista");
